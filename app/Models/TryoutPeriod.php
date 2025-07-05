@@ -22,4 +22,15 @@ class TryoutPeriod extends BaseModel
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
+
+    public function findActiveByAssessmentId(int $assessmentId)
+    {
+        $sql = "SELECT tryout_period_id FROM tryout_periods 
+                WHERE assessment_id = :assessment_id 
+                AND NOW() BETWEEN start_time AND end_time 
+                LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['assessment_id' => $assessmentId]);
+        return $stmt->fetch();
+    }
 }

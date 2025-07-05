@@ -8,6 +8,8 @@ use App\Models\StudentAssessmentAttempt;
 use App\Models\StudentAttemptDetail;
 use App\Models\SkillMastery;
 use App\Models\Subject;
+use App\Models\TryoutPeriod;
+use App\Models\Ranking;
 
 class AssessmentService
 {
@@ -18,6 +20,8 @@ class AssessmentService
     private StudentAttemptDetail $attemptDetailModel;
     private SkillMastery $skillMasteryModel;
     private Subject $subjectModel;
+    private TryoutPeriod $tryoutPeriodModel; 
+    private Ranking $rankingModel;
 
     public function __construct()
     {
@@ -28,6 +32,8 @@ class AssessmentService
         $this->attemptDetailModel = new StudentAttemptDetail();
         $this->skillMasteryModel = new SkillMastery();
         $this->subjectModel = new Subject();
+        $this->tryoutPeriodModel = new TryoutPeriod();
+        $this->rankingModel = new Ranking();
     }
 
     /**
@@ -176,6 +182,27 @@ class AssessmentService
             $this->skillMasteryModel->updateMastery($attempt['user_id'], $sId, $masteryLevel);
         }
 
+        if ($attempt['assessment_type'] === 'try_out') {
+    // Memanggil method baru dari model, bukan mengakses DB secara langsung
+    $tryoutPeriod = $this->tryoutPeriodModel->findActiveByAssessmentId($assessmentId);
+
+    if ($tryoutPeriod) {
+        // Simpan hasil ke tabel ranking
+        $this->rankingModel->saveOrUpdateRanking(
+            $attempt['user_id'],
+            $attemptId,
+            $assessmentId,
+            $tryoutPeriod['tryout_period_id'],
+            $totalScore
+        );
+        
+        // Kalkulasi ulang peringkat.
+        // NOTE: Di aplikasi produksi, ini sebaiknya dijalankan sebagai background job (cron job)
+        // agar tidak memperlambat response ke user. Untuk proyek ini, kita jalankan langsung.
+        $this->rankingModel->recalculateRanksForPeriod($tryoutPeriod['tryout_period_id']);
+    }
+}
+
         return [
             'score' => $totalScore,
             'total_correct' => $totalCorrect,
@@ -198,21 +225,22 @@ class AssessmentService
         $correctAnswers = []; // Simpan jawaban benar untuk setiap pertanyaan
         
         // Ambil semua jawaban untuk pertanyaan-pertanyaan ini
-        $questionIds = array_column($details, 'question_id');
-        if (!empty($questionIds)) {
-            $inQuery = implode(',', array_fill(0, count($questionIds), '?'));
-            $stmt = $this->answerModel->db->prepare("SELECT answer_id, question_id, answer_text, is_correct FROM answers WHERE question_id IN ($inQuery)");
-            $stmt->execute($questionIds);
-            $allAnswers = $stmt->fetchAll(\PDO::FETCH_GROUP|\PDO::FETCH_ASSOC);
+$questionIds = array_column($details, 'question_id');
+if (!empty($questionIds)) {
+    // Memanggil method baru dari model, bukan mengakses DB secara langsung
+    $allAnswersGrouped = $this->answerModel->getAnswersForQuestions($questionIds);
 
-            foreach ($allAnswers as $qId => $answers) {
-                foreach ($answers as $ans) {
-                    if ($ans['is_correct']) {
-                        $correctAnswers[$qId][] = $ans['answer_text'];
-                    }
+    foreach ($allAnswersGrouped as $qId => $answers) {
+        foreach ($answers as $ans) {
+            if ($ans['is_correct']) {
+                if (!isset($correctAnswers[$qId])) {
+                    $correctAnswers[$qId] = [];
                 }
+                $correctAnswers[$qId][] = $ans['answer_text'];
             }
         }
+    }
+}
 
 
         foreach ($details as &$detail) {
