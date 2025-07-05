@@ -13,4 +13,11 @@ class Lesson extends BaseModel
         $stmt->execute($moduleIds);
         return $stmt->fetchAll();
     }
+
+    public function findById(int $id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM lessons WHERE lesson_id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
 }

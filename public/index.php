@@ -39,27 +39,38 @@ switch ($routeInfo[0]) {
         http_response_code(405);
         echo '<h1>405 Method Not Allowed</h1>';
         break;
-    case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars = $routeInfo[2];
-        [$class, $method] = $handler;
+    // public/index.php
+case FastRoute\Dispatcher::FOUND:
+    $routeData = $routeInfo[1];
+    $vars = $routeInfo[2];
+    
+    // --- Logika Middleware BARU ---
+    // Cek jika rute ini memiliki middleware yang ditentukan
+    if (isset($routeData['middleware'])) {
+        $permission = $routeData['middleware'];
+        // Jalankan pemeriksaan izin
+        \App\Middleware\PermissionMiddleware::check($permission);
+    }
 
-        // --- Logika Middleware ---
-$uri = $_SERVER['REQUEST_URI'];
-// Melindungi semua rute yang diawali dengan /dashboard, /purchases, atau /tryouts
-if (strpos($uri, '/dashboard') === 0 || strpos($uri, '/purchases') === 0 || strpos($uri, '/tryouts') === 0) {
-    \App\Middleware\AuthMiddleware::handleAuth();
-}
-        if ($uri === '/login' || $uri === '/register') {
-            \App\Middleware\AuthMiddleware::handleGuest();
-        }
-        // --- Akhir Logika Middleware ---
+    // --- Logika Middleware Lama (untuk Guest/Auth non-admin) ---
+    $uri = $_SERVER['REQUEST_URI'];
+    if ($uri === '/login' || $uri === '/register') {
+        \App\Middleware\AuthMiddleware::handleGuest();
+    }
+    // Proteksi dashboard user biasa (jika diperlukan)
+    if ($uri === '/dashboard') {
+        \App\Middleware\AuthMiddleware::handleAuth();
+    }
+    // --- Akhir Logika Middleware ---
 
-        try {
-            $controller = new $class();
-            call_user_func_array([$controller, $method], array_values($vars));
-        } catch (Exception $e) {
-            // ... (error handling)
-        }
-        break;
+    $handler = $routeData['handler'];
+    [$class, $method] = $handler;
+
+    try {
+        $controller = new $class();
+        call_user_func_array([$controller, $method], $vars);
+    } catch (Exception $e) {
+        // ... (error handling yang sudah ada)
+    }
+    break;
 }

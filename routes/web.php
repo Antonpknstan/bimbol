@@ -39,6 +39,20 @@ return simpleDispatcher(function (RouteCollector $r) {
     // Rute Tryout
 $r->addRoute('GET', '/tryouts', ['App\Controllers\TryoutController', 'index']);
 $r->addRoute('GET', '/tryout/leaderboard/{id:\d+}', ['App\Controllers\TryoutController', 'showLeaderboard']);
+
+// --- RUTE ADMIN ---
+$r->addRoute('GET', '/admin/dashboard', [
+    'handler' => ['App\Controllers\Admin\DashboardController', 'index'], // 
+    'middleware' => 'view_admin_dashboard'
+]);
+$r->addRoute('GET', '/admin/upload/questions', [
+    'handler' => ['App\Controllers\Admin\UploadController', 'showQuestionUploadForm'],
+    'middleware' => 'upload_questions_batch'
+]);
+$r->addRoute('POST', '/admin/upload/questions', [
+    'handler' => ['App\Controllers\Admin\UploadController', 'handleQuestionUpload'],
+    'middleware' => 'upload_questions_batch'
+]);
     
     // Rute Dashboard (dilindungi)
     $r->addRoute('GET', '/dashboard', ['App\Controllers\DashboardController', 'index']);
