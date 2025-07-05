@@ -45,10 +45,11 @@ switch ($routeInfo[0]) {
         [$class, $method] = $handler;
 
         // --- Logika Middleware ---
-        $uri = $_SERVER['REQUEST_URI'];
-        if (strpos($uri, '/dashboard') === 0) {
-            \App\Middleware\AuthMiddleware::handleAuth();
-        }
+$uri = $_SERVER['REQUEST_URI'];
+// Melindungi semua rute yang diawali dengan /dashboard atau /purchases
+if (strpos($uri, '/dashboard') === 0 || strpos($uri, '/purchases') === 0) {
+    \App\Middleware\AuthMiddleware::handleAuth();
+}
         if ($uri === '/login' || $uri === '/register') {
             \App\Middleware\AuthMiddleware::handleGuest();
         }

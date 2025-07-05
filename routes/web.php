@@ -16,6 +16,9 @@ return simpleDispatcher(function (RouteCollector $r) {
 
     $r->addRoute('GET', '/packages', ['App\Controllers\PackageController', 'index']);
 
+    $r->addRoute('POST', '/purchase/{packageId:\d+}', ['App\Controllers\PurchaseController', 'buy']);
+    $r->addRoute('GET', '/purchases/history', ['App\Controllers\PurchaseController', 'history']);
+
     // Rute Konten Pembelajaran
     $r->addRoute('GET', '/courses', ['App\Controllers\LearningController', 'index']);
     // \d+ memastikan {id} hanya menerima angka (digit)
