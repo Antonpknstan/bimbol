@@ -23,6 +23,18 @@ return simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/courses', ['App\Controllers\LearningController', 'index']);
     // \d+ memastikan {id} hanya menerima angka (digit)
     $r->addRoute('GET', '/course/{id:\d+}', ['App\Controllers\LearningController', 'show']);
+
+    // Rute Asesmen & Upaya
+    $r->addRoute('GET', '/assessment/start/{id:\d+}', ['App\Controllers\AssessmentController', 'start']);
+    $r->addRoute('GET', '/assessment/attempt/{id:\d+}', ['App\Controllers\AssessmentController', 'showAttempt']);
+    $r->addRoute('POST', '/assessment/submit/{id:\d+}', ['App\Controllers\AssessmentController', 'submit']);
+    $r->addRoute('GET', '/assessment/result/{id:\d+}', ['App\Controllers\AssessmentController', 'showResult']);
+
+    // Rute Progres
+    $r->addRoute('POST', '/progress/mark-lesson-complete/{id:\d+}', ['App\Controllers\ProgressController', 'markLessonAsCompleted']);
+
+    // Rute Pelajaran
+    $r->addRoute('GET', '/lesson/{id:\d+}', ['App\Controllers\LessonController', 'show']);
     
     // Rute Dashboard (dilindungi)
     $r->addRoute('GET', '/dashboard', ['App\Controllers\DashboardController', 'index']);
