@@ -1,0 +1,23 @@
+{
+    "name": "anton/bimbel-online-platform",
+    "description": "Online Tutoring Platform using Pure PHP.",
+    "type": "project",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "anton",
+            "email": "4111220009_anton@pknstan.ac.id"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "nikic/fast-route": "^1.3",
+        "phpmailer/phpmailer": "^6.10",
+        "phpoffice/phpspreadsheet": "^4.4"
+    }
+}
