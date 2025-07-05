@@ -79,3 +79,17 @@ footer {
     padding: 20px 0;
     margin-top: auto;
 }
+
+/* Auth Page Styles */
+.auth-body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: #e9ecef; }
+.auth-container { width: 100%; max-width: 400px; background: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.auth-header { text-align: center; margin-bottom: 25px; }
+.auth-header .brand { font-size: 1.8em; margin-bottom: 10px; display: block; }
+.auth-header h2 { margin: 0; font-size: 1.5em; color: #333; }
+
+/* Form Styles */
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+.button.button-primary { width: 100%; padding: 12px; font-size: 1em; }
+.form-footer { margin-top: 20px; text-align: center; font-size: 0.9em; }
