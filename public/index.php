@@ -46,8 +46,8 @@ switch ($routeInfo[0]) {
 
         // --- Logika Middleware ---
 $uri = $_SERVER['REQUEST_URI'];
-// Melindungi semua rute yang diawali dengan /dashboard atau /purchases
-if (strpos($uri, '/dashboard') === 0 || strpos($uri, '/purchases') === 0) {
+// Melindungi semua rute yang diawali dengan /dashboard, /purchases, atau /tryouts
+if (strpos($uri, '/dashboard') === 0 || strpos($uri, '/purchases') === 0 || strpos($uri, '/tryouts') === 0) {
     \App\Middleware\AuthMiddleware::handleAuth();
 }
         if ($uri === '/login' || $uri === '/register') {
@@ -57,7 +57,7 @@ if (strpos($uri, '/dashboard') === 0 || strpos($uri, '/purchases') === 0) {
 
         try {
             $controller = new $class();
-            call_user_func_array([$controller, $method], $vars);
+            call_user_func_array([$controller, $method], array_values($vars));
         } catch (Exception $e) {
             // ... (error handling)
         }

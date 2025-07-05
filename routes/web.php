@@ -35,6 +35,10 @@ return simpleDispatcher(function (RouteCollector $r) {
 
     // Rute Pelajaran
     $r->addRoute('GET', '/lesson/{id:\d+}', ['App\Controllers\LessonController', 'show']);
+
+    // Rute Tryout
+$r->addRoute('GET', '/tryouts', ['App\Controllers\TryoutController', 'index']);
+$r->addRoute('GET', '/tryout/leaderboard/{id:\d+}', ['App\Controllers\TryoutController', 'showLeaderboard']);
     
     // Rute Dashboard (dilindungi)
     $r->addRoute('GET', '/dashboard', ['App\Controllers\DashboardController', 'index']);
