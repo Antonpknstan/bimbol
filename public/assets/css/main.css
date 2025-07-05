@@ -229,3 +229,8 @@ footer {
 .completion-status.completed { font-weight: bold; color: #28a745; }
 .lesson-item a { text-decoration: none; color: #333; display: block; }
 .lesson-item a:hover { color: #007bff; }
+
+/* Leaderboard Styles */
+.data-table tr.top-rank { font-weight: bold; }
+.data-table tr.top-rank td { background-color: #fff3cd; }
+.data-table .rank-cell { text-align: center; font-size: 1.5em; }
