@@ -11,6 +11,12 @@
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
     </div>
+    
+    <div class="form-group">
+        <label for="phone_number">Nomor Telepon (opsional)</label>
+        <input type="tel" id="phone_number" name="phone_number" placeholder="+628123456789">
+    </div>
+
     <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
