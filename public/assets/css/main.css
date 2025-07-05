@@ -114,3 +114,13 @@ footer {
 .lesson-item { padding: 10px 0; border-bottom: 1px dashed #eee; }
 .lesson-item:last-child { border-bottom: none; }
 .lesson-icon { margin-right: 10px; }
+
+/* Package Page Styles */
+.package-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; text-align: left; }
+.package-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; border-top: 5px solid #007bff; }
+.package-header { padding: 20px; border-bottom: 1px solid #eee; text-align: center; }
+.package-header h3 { margin: 0; font-size: 1.4em; }
+.package-price { font-size: 2em; font-weight: bold; color: #007bff; margin-top: 10px; }
+.package-body { padding: 20px; flex-grow: 1; color: #555; line-height: 1.6; }
+.package-footer { padding: 20px; background: #f8f9fa; }
+.package-footer form button { width: 100%; }

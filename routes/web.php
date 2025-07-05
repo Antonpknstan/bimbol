@@ -14,6 +14,8 @@ return simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/register', ['App\Controllers\AuthController', 'register']);
     $r->addRoute('GET', '/logout', ['App\Controllers\AuthController', 'logout']);
 
+    $r->addRoute('GET', '/packages', ['App\Controllers\PackageController', 'index']);
+
     // Rute Konten Pembelajaran
     $r->addRoute('GET', '/courses', ['App\Controllers\LearningController', 'index']);
     // \d+ memastikan {id} hanya menerima angka (digit)
