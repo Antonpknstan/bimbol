@@ -16,12 +16,16 @@ try {
     die("Error: Tidak dapat menemukan file .env. Pastikan Anda telah menyalin .env.example menjadi .env.");
 }
 
-// === Uji Keberhasilan Fase 1 ===
-echo "<h1>Fase 1 Berhasil!</h1>";
-echo "<p>Front Controller berhasil dimuat.</p>";
+use App\Config\Database;
 
-$dbHost = $_ENV['DB_HOST'] ?? 'Tidak Ditemukan';
-echo "<p>Variabel .env berhasil dibaca: DB_HOST = <strong>" . htmlspecialchars($dbHost) . "</strong></p>";
+try {
+    $pdo = Database::getInstance();
+    echo "<h1>Fase 2, Langkah 1 Berhasil!</h1>";
+    echo "<p>Koneksi ke database '<strong>" . $_ENV['DB_DATABASE'] . "</strong>' berhasil dibuat.</p>";
+    echo "<p>Versi Server MySQL: " . $pdo->getAttribute(PDO::ATTR_SERVER_VERSION) . "</p>";
 
-// Placeholder untuk router akan ditambahkan di fase berikutnya
-// ...
+} catch (PDOException $e) {
+    echo "<h1>Fase 2, Langkah 1 GAGAL!</h1>";
+    echo "<p style='color:red;'>Tidak dapat terhubung ke database: " . $e->getMessage() . "</p>";
+    echo "<p><strong>Periksa kembali konfigurasi DB_DATABASE, DB_USERNAME, dan DB_PASSWORD di file .env Anda. Pastikan database '" . $_ENV['DB_DATABASE'] . "' sudah dibuat di phpMyAdmin.</strong></p>";
+}
