@@ -93,3 +93,24 @@ footer {
 .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
 .button.button-primary { width: 100%; padding: 12px; font-size: 1em; }
 .form-footer { margin-top: 20px; text-align: center; font-size: 0.9em; }
+
+/* Course Page Styles */
+.course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; text-align: left; }
+.course-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
+.course-card-body { padding: 20px; flex-grow: 1; }
+.course-subject { background-color: #e7f3ff; color: #007bff; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; }
+.course-title { margin: 15px 0 10px; font-size: 1.2em; }
+.course-description { font-size: 0.9em; color: #666; line-height: 1.5; }
+.course-card-footer { background-color: #f8f9fa; padding: 15px 20px; border-top: 1px solid #eee; }
+.button.button-secondary { background-color: #6c757d; display: block; text-align: center; }
+.button.button-secondary:hover { background-color: #5a6268; }
+
+/* Course Detail Styles */
+.course-detail-header, .module-list { text-align: left; background: #fff; padding: 30px; border-radius: 8px; margin-bottom: 20px; }
+.course-description-full { font-size: 1.1em; line-height: 1.6; color: #555; }
+.module-item { border: 1px solid #e0e0e0; border-radius: 5px; margin-bottom: 15px; }
+.module-item h3 { background-color: #f7f7f7; margin: 0; padding: 15px; border-bottom: 1px solid #e0e0e0; }
+.lesson-list { list-style: none; margin: 0; padding: 10px 15px; }
+.lesson-item { padding: 10px 0; border-bottom: 1px dashed #eee; }
+.lesson-item:last-child { border-bottom: none; }
+.lesson-icon { margin-right: 10px; }
