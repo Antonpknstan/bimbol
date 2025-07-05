@@ -5,38 +5,42 @@ namespace App\Controllers;
 abstract class BaseController
 {
     /**
-     * Render sebuah file view dengan data yang diberikan.
+     * Render sebuah file view dan bungkus dengan layout utama.
      *
      * @param string $viewPath Path ke file view (misal: 'home' atau 'auth/login')
-     * @param array $data Data untuk diekstrak menjadi variabel di dalam view
+     * @param array $data Data untuk diekstrak menjadi variabel di dalam view dan layout
+     * @param string $layoutPath Path ke file layout utama
      */
-    protected function render(string $viewPath, array $data = [])
+    protected function render(string $viewPath, array $data = [], string $layoutPath = 'layout/app')
     {
-        // Ubah path seperti 'auth/login' menjadi path file sistem seperti 'app/Views/auth/login.php'
+        // Path lengkap ke file view konten
         $fullViewPath = __DIR__ . '/../Views/' . $viewPath . '.php';
 
         if (!file_exists($fullViewPath)) {
-            // Tampilkan error jika file view tidak ditemukan
             http_response_code(500);
             echo "Error: View file not found at: " . htmlspecialchars($fullViewPath);
             exit;
         }
 
-        // Ekstrak array $data menjadi variabel-variabel individual.
-        // Contoh: ['title' => 'My Page'] akan menjadi variabel $title = 'My Page'
+        // Ekstrak data agar bisa diakses sebagai variabel di view dan layout
         extract($data);
 
-        // Mulai output buffering untuk menangkap output dari view
+        // --- Langkah A: Render konten spesifik halaman ke dalam sebuah variabel ---
         ob_start();
-
-        // Sertakan file view, yang sekarang memiliki akses ke variabel yang diekstrak
         require $fullViewPath;
+        $content = ob_get_clean(); // $content sekarang berisi HTML dari home.php
 
-        // Ambil konten buffer dan bersihkan
-        $content = ob_get_clean();
+        // --- Langkah B: Render layout utama, yang akan menggunakan variabel $content ---
+        $fullLayoutPath = __DIR__ . '/../Views/' . $layoutPath . '.php';
 
-        // Tampilkan kontennya (nantinya bisa dimasukkan ke dalam layout utama)
-        echo $content;
+        if (!file_exists($fullLayoutPath)) {
+            http_response_code(500);
+            echo "Error: Layout file not found at: " . htmlspecialchars($fullLayoutPath);
+            exit;
+        }
+
+        // Tampilkan layout utama, yang di dalamnya akan menampilkan $content
+        require $fullLayoutPath;
     }
 
     /**
@@ -44,7 +48,9 @@ abstract class BaseController
      */
     protected function redirect(string $url)
     {
-        header('Location: ' . $url);
+        // Pastikan APP_URL di .env diakhiri tanpa slash
+        $baseUrl = rtrim($_ENV['APP_URL'], '/');
+        header('Location: ' . $baseUrl . $url);
         exit;
     }
 
