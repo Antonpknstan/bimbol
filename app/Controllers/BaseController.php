@@ -46,11 +46,25 @@ abstract class BaseController
     /**
      * Redirect ke URL lain.
      */
+        /**
+     * Redirect ke URL lain dengan lebih andal.
+     */
     protected function redirect(string $url)
     {
-        // Pastikan APP_URL di .env diakhiri tanpa slash
-        $baseUrl = rtrim($_ENV['APP_URL'], '/');
-        header('Location: ' . $baseUrl . $url);
+        // Jika ada output buffer yang aktif, bersihkan dulu.
+        // Ini mencegah error "headers already sent" dalam beberapa kasus.
+        if (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Gunakan APP_URL dari .env, atau default ke URL server saat ini jika tidak ada.
+        $baseUrl = rtrim($_ENV['APP_URL'] ?? 'http://' . $_SERVER['HTTP_HOST'], '/');
+        $location = $baseUrl . $url;
+
+        // Kirim header redirect dengan status code 302 (Found) secara eksplisit.
+        header('Location: ' . $location, true, 302);
+        
+        // Pastikan tidak ada kode lain yang dieksekusi setelah redirect.
         exit;
     }
 
