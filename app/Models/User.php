@@ -48,4 +48,21 @@ class User extends BaseModel
         'password_hash' => password_hash($data['password'], PASSWORD_DEFAULT)
     ]);
 }
+
+public function hasPermission(int $userId, string $permissionName): bool
+{
+    $sql = "SELECT COUNT(*)
+            FROM user_roles ur
+            JOIN role_permissions rp ON ur.role_id = rp.role_id
+            JOIN permissions p ON rp.permission_id = p.permission_id
+            WHERE ur.user_id = :user_id AND p.name = :permission_name";
+    
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        'user_id' => $userId,
+        'permission_name' => $permissionName
+    ]);
+
+    return $stmt->fetchColumn() > 0;
+}
 }
