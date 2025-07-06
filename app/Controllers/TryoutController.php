@@ -16,18 +16,18 @@ class TryoutController extends BaseController
         ]);
     }
 
-    public function showLeaderboard(int $tryoutPeriodId)
+    public function showLeaderboard(int $id)
     {
         $tryoutModel = new TryoutPeriod();
         $rankingModel = new Ranking();
         
-        $tryout = $tryoutModel->findById($tryoutPeriodId);
+        $tryout = $tryoutModel->findById($id);
         if (!$tryout) {
             http_response_code(404);
             return $this->render('errors/404');
         }
 
-        $leaderboard = $rankingModel->getLeaderboard($tryoutPeriodId);
+        $leaderboard = $rankingModel->getLeaderboard($id);
 
         $this->render('tryouts/leaderboard', [
             'title' => 'Peringkat Tryout: ' . htmlspecialchars($tryout['name']),

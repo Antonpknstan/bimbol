@@ -47,4 +47,11 @@ class Purchase extends BaseModel
         $stmt->execute(['user_id' => $userId]);
         return $stmt->fetchAll();
     }
+
+    public function countByStatus(string $status): int
+{
+    $stmt = $this->db->prepare("SELECT COUNT(*) FROM purchases WHERE status = :status");
+    $stmt->execute(['status' => $status]);
+    return (int) $stmt->fetchColumn();
+}
 }

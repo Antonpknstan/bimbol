@@ -65,4 +65,70 @@ public function hasPermission(int $userId, string $permissionName): bool
 
     return $stmt->fetchColumn() > 0;
 }
+
+public function findById(int $id)
+{
+    $stmt = $this->db->prepare("SELECT user_id, full_name, username, email FROM users WHERE user_id = :id");
+    $stmt->execute(['id' => $id]);
+    return $stmt->fetch();
+}
+
+public function findAllWithRoles()
+{
+    $sql = "SELECT u.user_id, u.full_name, u.username, u.email, GROUP_CONCAT(r.name SEPARATOR ', ') as roles
+            FROM users u
+            LEFT JOIN user_roles ur ON u.user_id = ur.user_id
+            LEFT JOIN roles r ON ur.role_id = r.role_id
+            GROUP BY u.user_id
+            ORDER BY u.user_id ASC";
+    $stmt = $this->db->query($sql);
+    return $stmt->fetchAll();
+}
+
+public function getRoleIds(int $userId): array
+{
+    $stmt = $this->db->prepare("SELECT role_id FROM user_roles WHERE user_id = :user_id");
+    $stmt->execute(['user_id' => $userId]);
+    // fetchAll dengan PDO::FETCH_COLUMN akan mengembalikan array 1 dimensi berisi role_id
+    return $stmt->fetchAll(\PDO::FETCH_COLUMN, 0);
+}
+
+public function syncRoles(int $userId, array $roleIds): bool
+{
+    $this->db->beginTransaction();
+    try {
+        // 1. Hapus semua peran lama pengguna ini
+        $stmt_delete = $this->db->prepare("DELETE FROM user_roles WHERE user_id = :user_id");
+        $stmt_delete->execute(['user_id' => $userId]);
+
+        // 2. Insert peran baru jika ada yang dipilih
+        if (!empty($roleIds)) {
+            $stmt_insert = $this->db->prepare("INSERT INTO user_roles (user_id, role_id) VALUES (:user_id, :role_id)");
+            foreach ($roleIds as $roleId) {
+                $stmt_insert->execute([
+                    'user_id' => $userId,
+                    'role_id' => (int)$roleId // Pastikan integer
+                ]);
+            }
+        }
+        
+        $this->db->commit();
+        return true;
+    } catch (\PDOException $e) {
+        $this->db->rollBack();
+        error_log("Failed to sync roles: " . $e->getMessage());
+        return false;
+    }
+}
+
+public function countAll(): int
+{
+    return (int) $this->db->query("SELECT COUNT(*) FROM users")->fetchColumn();
+}
+
+public function findRecent(int $limit = 5): array
+{
+    $stmt = $this->db->query("SELECT user_id, full_name, email, created_at FROM users ORDER BY created_at DESC LIMIT $limit");
+    return $stmt->fetchAll();
+}
 }

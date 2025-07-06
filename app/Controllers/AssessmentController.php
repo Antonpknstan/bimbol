@@ -18,9 +18,9 @@ class AssessmentController extends BaseController
 
     /**
      * Memulai asesmen baru.
-     * @param int $assessmentId ID asesmen yang akan dimulai
+     * @param int $id ID asesmen yang akan dimulai
      */
-    public function start(int $assessmentId)
+    public function start(int $id)
     {
         if (!Session::has('user')) {
             $this->redirect('/login');
@@ -28,31 +28,30 @@ class AssessmentController extends BaseController
         }
 
         $userId = Session::get('user')['id'];
-        $attemptId = $this->assessmentService->startNewAttempt($assessmentId, $userId);
+        $attemptId = $this->assessmentService->startNewAttempt($id, $userId);
 
         if ($attemptId) {
             $this->redirect('/assessment/attempt/' . $attemptId);
         } else {
-            // Error handling, misal redirect ke halaman error atau daftar asesmen
-            $this->redirect('/dashboard'); // Atau halaman daftar asesmen
+            $this->redirect('/dashboard');
         }
     }
 
     /**
      * Menampilkan halaman pengerjaan asesmen.
-     * @param int $attemptId ID upaya asesmen yang sedang berlangsung
+     * @param int $id ID upaya asesmen yang sedang berlangsung
      */
-    public function showAttempt(int $attemptId)
+    public function showAttempt(int $id) // PERUBAHAN
     {
         if (!Session::has('user')) {
             $this->redirect('/login');
             return;
         }
 
-        $attempt = $this->assessmentService->getAssessmentForAttempt($attemptId);
+        $attempt = $this->assessmentService->getAssessmentForAttempt($id); // PERUBAHAN
         
         if (!$attempt || $attempt['user_id'] !== Session::get('user')['id'] || $attempt['status'] !== 'in_progress') {
-            $this->redirect('/dashboard'); // Atau halaman error/not allowed
+            $this->redirect('/dashboard');
             return;
         }
         
@@ -64,44 +63,42 @@ class AssessmentController extends BaseController
 
     /**
      * Memproses submit jawaban asesmen.
-     * @param int $attemptId ID upaya asesmen yang disubmit
+     * @param int $id ID upaya asesmen yang disubmit
      */
-    public function submit(int $attemptId)
+    public function submit(int $id) // PERUBAHAN
     {
         if (!Session::has('user') || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/login');
             return;
         }
 
-        // Ambil jawaban dari POST request. Format: ['question_id' => 'chosen_answer_id']
         $submittedAnswers = $_POST['answers'] ?? []; 
         
-        $result = $this->assessmentService->gradeAttempt($attemptId, $submittedAnswers);
+        $result = $this->assessmentService->gradeAttempt($id, $submittedAnswers); // PERUBAHAN
 
         if (isset($result['error'])) {
-            // Handle error grading
-            $this->redirect('/dashboard'); // Atau tampilkan pesan error
+            $this->redirect('/dashboard');
             return;
         }
 
-        $this->redirect('/assessment/result/' . $attemptId);
+        $this->redirect('/assessment/result/' . $id); // PERUBAHAN
     }
 
     /**
      * Menampilkan hasil asesmen yang sudah selesai.
-     * @param int $attemptId ID upaya asesmen yang telah selesai
+     * @param int $id ID upaya asesmen yang telah selesai
      */
-    public function showResult(int $attemptId)
+    public function showResult(int $id) // PERUBAHAN
     {
         if (!Session::has('user')) {
             $this->redirect('/login');
             return;
         }
 
-        $attemptResult = $this->assessmentService->getAttemptResultDetails($attemptId);
+        $attemptResult = $this->assessmentService->getAttemptResultDetails($id); // PERUBAHAN
         
         if (!$attemptResult || $attemptResult['user_id'] !== Session::get('user')['id']) {
-            $this->redirect('/dashboard'); // Atau halaman error/not allowed
+            $this->redirect('/dashboard');
             return;
         }
 

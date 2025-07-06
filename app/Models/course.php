@@ -19,4 +19,9 @@ class Course extends BaseModel
         $stmt->execute(['id' => $id]);
         return $stmt->fetch();
     }
+
+    public function countAll(): int
+{
+    return (int) $this->db->query("SELECT COUNT(*) FROM courses")->fetchColumn();
+}
 }

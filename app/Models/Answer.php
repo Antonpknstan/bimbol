@@ -32,4 +32,19 @@ class Answer extends BaseModel
         // Menggunakan FETCH_GROUP untuk mengelompokkan hasil secara otomatis berdasarkan kolom pertama (question_id)
         return $stmt->fetchAll(\PDO::FETCH_GROUP | \PDO::FETCH_ASSOC);
     }
+
+    public function create(int $questionId, array $data): bool
+    {
+        $sql = "INSERT INTO answers (question_id, answer_text, answer_image_url, is_correct, score_value) 
+                VALUES (:question_id, :answer_text, :answer_image_url, :is_correct, :score_value)";
+        
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+        'question_id' => $questionId,
+        'answer_text' => $data['text'] ?? null,
+        'answer_image_url' => $data['answer_image_url'] ?? null,
+        'is_correct' => (bool) ($data['is_correct'] ?? false), // Sudah menangani is_correct
+        'score_value' => $data['score'] ?? null // Sudah menangani score
+    ]);
+    }
 }
