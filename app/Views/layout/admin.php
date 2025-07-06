@@ -16,6 +16,7 @@
     </style>
 </head>
 <body>
+    <?php require __DIR__ . '/../partials/flash_message.php'; ?>
     <div class="admin-sidebar">
         <h3>Panel Admin</h3>
         <ul>

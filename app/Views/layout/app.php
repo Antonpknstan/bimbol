@@ -13,6 +13,7 @@
     <?php require __DIR__ . '/../partials/header.php'; // Memasukkan header ?>
 
     <main class="container">
+        <?php require __DIR__ . '/../partials/flash_message.php'; ?>
         <!-- Di sinilah konten spesifik halaman akan disuntikkan -->
         <?= $content ?? '' ?>
     </main>
