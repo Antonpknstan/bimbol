@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 
 require __DIR__ . '/../vendor/autoload.php';
 App\Utils\Session::start();
+\App\Middleware\CSRFMiddleware::handle();
 
 try {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');

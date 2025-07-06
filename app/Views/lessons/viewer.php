@@ -62,6 +62,29 @@
             <p>Silakan <a href="/login">login</a> untuk melacak kemajuan belajar Anda.</p>
         <?php endif; ?>
     </div>
+
+<div class="report-section">
+    <button id="reportBtn" class="button button-sm button-danger">Laporkan Masalah</button>
+</div>
+
+<!-- Modal untuk Laporan (awalnya disembunyikan) -->
+<div id="reportModal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <h2>Laporkan Masalah</h2>
+        <p>Ada masalah dengan pelajaran "<?= htmlspecialchars($lesson['title']) ?>"? Beri tahu kami.</p>
+        <form id="reportForm">
+            <input type="hidden" name="report_type" value="lesson">
+            <input type="hidden" name="item_id" value="<?= $lesson['lesson_id'] ?>">
+            <div class="form-group">
+                <label for="description">Jelaskan masalahnya:</label>
+                <textarea name="description" id="description" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="button button-primary">Kirim Laporan</button>
+        </form>
+        <div id="reportResponse"></div>
+    </div>
+</div>
 </div>
 
 <?php if (\App\Utils\Session::has('user') && !$isCompleted): ?>
@@ -107,5 +130,79 @@
             btn.disabled = false;
         });
     });
+
+
+// --- JavaScript untuk Modal Laporan ---
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('reportModal');
+    const reportBtn = document.getElementById('reportBtn');
+    const closeBtn = document.querySelector('.modal .close-button');
+    const reportForm = document.getElementById('reportForm');
+    const reportResponse = document.getElementById('reportResponse');
+
+    if (reportBtn) {
+        // Tampilkan modal saat tombol report diklik
+        reportBtn.onclick = function() {
+            modal.style.display = 'block';
+        }
+    }
+    
+    if (closeBtn) {
+        // Sembunyikan modal saat tombol close diklik
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Sembunyikan modal saat mengklik di luar area konten modal
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    if (reportForm) {
+        // Tangani pengiriman form laporan dengan AJAX
+        reportForm.onsubmit = function(event) {
+            event.preventDefault(); // Mencegah form submit biasa
+
+            const formData = new FormData(this);
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Mengirim...';
+            reportResponse.textContent = '';
+            reportResponse.style.color = '';
+
+            fetch('/report/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    reportResponse.textContent = data.message;
+                    reportResponse.style.color = 'green';
+                    // Kosongkan form dan sembunyikan modal setelah beberapa detik
+                    setTimeout(() => {
+                        reportForm.reset();
+                        modal.style.display = 'none';
+                    }, 2000);
+                } else {
+                    reportResponse.textContent = 'Error: ' + data.message;
+                    reportResponse.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                reportResponse.textContent = 'Terjadi kesalahan jaringan. Silakan coba lagi.';
+                reportResponse.style.color = 'red';
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Kirim Laporan';
+            });
+        }
+    }
+});
 </script>
 <?php endif; ?>
