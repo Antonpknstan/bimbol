@@ -19,7 +19,7 @@ if (isset($flash_message) && is_array($flash_message) && !empty($flash_message['
 
 <div class="form-container" style="max-width: 600px; margin: 0 auto;">
     <!-- PASTIKAN BARIS INI BENAR -->
-    <form action="/admin/upload/excel" method="POST" enctype="multipart/form-data">
+    <form action="/admin/upload/excel" method="POST" enctype="multipart/form-data"> <?= \App\Utils\CSRF::field() ?>
         <div class="form-group">
             <label for="excel_file">Pilih File Excel (.xlsx / .xls)</label>
             <input type="file" name="excel_file" id="excel_file" accept=".xlsx, .xls" required>

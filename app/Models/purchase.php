@@ -3,20 +3,29 @@ namespace App\Models;
 
 class Purchase extends BaseModel
 {
-    public function create(array $data): ?string
+     /**
+     * Membuat entri pembelian baru.
+     * @param array $data Data pembelian
+     * @return int|false ID pembelian yang baru dibuat, atau false jika gagal.
+     */
+    public function create(array $data): int|false
     {
         $sql = "INSERT INTO purchases (transaction_id, user_id, package_id, price_at_purchase, status) 
                 VALUES (:transaction_id, :user_id, :package_id, :price_at_purchase, 'pending')";
         
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([
+        $success = $stmt->execute([
             'transaction_id' => $data['transaction_id'],
             'user_id' => $data['user_id'],
             'package_id' => $data['package_id'],
             'price_at_purchase' => $data['price_at_purchase'],
         ]);
 
-        return $this->db->lastInsertId();
+        if ($success) {
+            return (int) $this->db->lastInsertId();
+        }
+        
+        return false;
     }
     
     public function findByTransactionId(string $transactionId)

@@ -234,3 +234,148 @@ footer {
 .data-table tr.top-rank { font-weight: bold; }
 .data-table tr.top-rank td { background-color: #fff3cd; }
 .data-table .rank-cell { text-align: center; font-size: 1.5em; }
+
+/* --- Modal Styles --- */
+.modal {
+    display: none; /* Disembunyikan secara default */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5); /* Latar belakang semi-transparan */
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 30px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+    animation: slideIn 0.3s;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Report Button */
+.report-section { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: right; }
+.button.button-danger { background-color: #dc3545; }
+.button.button-danger:hover { background-color: #c82333; }
+#reportResponse { margin-top: 15px; font-weight: bold; }
+
+/* Keyframe Animations */
+@keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+@keyframes slideIn { from {top: -50px; opacity: 0} to {top: 0; opacity: 1} }
+
+/* --- Notification Dropdown Styles --- */
+.user-nav { display: flex; align-items: center; list-style: none; margin: 0; padding: 0; }
+.main-nav { flex-grow: 1; }
+.notification-dropdown { position: relative; }
+#notificationBell { position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #555; }
+#notificationBell:hover { color: #007bff; }
+#notificationBadge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: bold;
+    display: none; /* Tampil jika ada notif */
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+.dropdown-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background-color: white;
+    min-width: 320px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.dropdown-panel .panel-header {
+    padding: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #f0f0f0;
+}
+.dropdown-panel .panel-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.notification-item {
+    display: block;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    text-decoration: none;
+    color: #333;
+}
+.notification-item.unread {
+    background-color: #e7f3ff;
+}
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item strong {
+    display: block;
+    margin-bottom: 5px;
+}
+.notification-item p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #666;
+}
+.notification-item small {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.8em;
+    color: #999;
+}
+.dropdown-panel .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: #999;
+}
+.loading-spinner { /* Animasi loading sederhana */
+    border: 4px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 4px solid #3498db;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 40px auto;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }

@@ -1,7 +1,7 @@
 <p>Pilih peran yang ingin Anda tetapkan untuk pengguna <strong><?= htmlspecialchars($user['full_name']) ?></strong> (@<?= htmlspecialchars($user['username']) ?>).</p>
 
 <div class="form-container" style="max-width: 600px;">
-    <form action="/admin/users/<?= $user['user_id'] ?>/roles" method="POST">
+    <form action="/admin/users/<?= $user['user_id'] ?>/roles" method="POST"> <?= \App\Utils\CSRF::field() ?>
         <div class="form-group">
             <label>Peran yang Tersedia:</label>
             

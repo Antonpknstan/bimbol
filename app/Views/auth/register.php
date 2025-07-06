@@ -1,4 +1,4 @@
-<form action="/register" method="POST">
+<form action="/register" method="POST"> <?= \App\Utils\CSRF::field() ?>
     <div class="form-group">
         <label for="full_name">Nama Lengkap</label>
         <input type="text" id="full_name" name="full_name" required>

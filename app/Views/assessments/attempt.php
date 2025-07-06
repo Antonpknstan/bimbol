@@ -2,6 +2,7 @@
 <p>Sisa Waktu: <span id="timer"><?= $attempt['time_limit_minutes'] ?? 'Tidak Terbatas' ?> menit</span></p>
 
 <form action="/assessment/submit/<?= $attempt['attempt_id'] ?>" method="POST" id="assessmentForm">
+    <?= \App\Utils\CSRF::field() ?>
     <input type="hidden" name="attempt_id" value="<?= $attempt['attempt_id'] ?>">
 
     <?php foreach ($attempt['questions'] as $index => $question): ?>

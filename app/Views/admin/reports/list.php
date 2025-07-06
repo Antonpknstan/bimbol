@@ -21,7 +21,7 @@
                     <td><?= htmlspecialchars($report['reporter_username']) ?></td>
                     <td><span class="status-badge status-<?= $report['status'] ?>"><?= $report['status'] ?></span></td>
                     <td>
-                        <form action="/admin/reports/<?= $report['report_id'] ?>/status" method="POST">
+                        <form action="/admin/reports/<?= $report['report_id'] ?>/status" method="POST"> <?= \App\Utils\CSRF::field() ?>
                             <select name="status">
                                 <option value="in_review" <?= $report['status'] == 'in_review' ? 'selected' : '' ?>>In Review</option>
                                 <option value="resolved" <?= $report['status'] == 'resolved' ? 'selected' : '' ?>>Resolved</option>

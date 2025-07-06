@@ -38,7 +38,7 @@ if (!empty($flashMessage) && is_array($flashMessage)) {
     <li>Gambar Jawaban B: `[baris]-b.png` (contoh: `4-b.png` untuk jawaban B di baris 4)</li>
     <li>...dan seterusnya untuk `-c`, `-d`, `-e`.</li>
 </ul>
-    <form action="/admin/upload/zip/<?= $batch['batch_id'] ?>" method="POST" enctype="multipart/form-data">
+    <form action="/admin/upload/zip/<?= $batch['batch_id'] ?>" method="POST" enctype="multipart/form-data"> <?= \App\Utils\CSRF::field() ?>
     <input type="file" name="zip_file" accept=".zip" required>
     <button type="submit" class="button button-secondary">Upload ZIP</button>
 </form>
@@ -81,7 +81,7 @@ if (!empty($flashMessage) && is_array($flashMessage)) {
 <div class="finalize-container">
     <h4>Tahap 3: Finalisasi</h4>
     <p>Setelah Anda yakin semua data sudah benar dan gambar (jika ada) telah terunggah, klik tombol di bawah ini untuk memindahkan semua data ke database utama. <strong>Tindakan ini tidak dapat diurungkan.</strong></p>
-    <form action="/admin/upload/finalize/<?= $batch['batch_id'] ?>" method="POST">
+    <form action="/admin/upload/finalize/<?= $batch['batch_id'] ?>" method="POST"> <?= \App\Utils\CSRF::field() ?>
         <button type="submit" class="button button-primary" onclick="return confirm('Anda yakin ingin memfinalisasi batch ini?')">Finalisasi dan Masukkan ke Sistem</button>
     </form>
 </div>

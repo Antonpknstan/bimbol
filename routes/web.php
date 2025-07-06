@@ -44,6 +44,32 @@ return simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/tryouts', ['handler' => ['App\Controllers\TryoutController', 'index']]);
     $r->addRoute('GET', '/tryout/leaderboard/{id:\d+}', ['handler' => ['App\Controllers\TryoutController', 'showLeaderboard']]);
 
+    // Rute Laporan (API Internal)
+$r->addRoute('POST', '/report/submit', ['handler' => ['App\Controllers\ReportController', 'submit']]);
+
+// Rute Notifikasi (API Internal)
+$r->addRoute('GET', '/notifications/fetch', ['handler' => ['App\Controllers\NotificationController', 'fetch']]);
+$r->addRoute('POST', '/notifications/mark-read', ['handler' => ['App\Controllers\NotificationController', 'markRead']]);
+
+// Rute Admin untuk Laporan
+$r->addRoute('GET', '/admin/reports', [
+    'handler' => ['App\Controllers\Admin\ReportManagementController', 'listReports'],
+    'middleware' => 'view_reports'
+]);
+$r->addRoute('POST', '/admin/reports/{id:\d+}/status', [
+    'handler' => ['App\Controllers\Admin\ReportManagementController', 'updateStatus'],
+    'middleware' => 'view_reports'
+]);
+
+// Rute Reset Password
+$r->addRoute('GET', '/forgot-password', ['handler' => ['App\Controllers\AuthController', 'showForgotPasswordForm']]);
+$r->addRoute('POST', '/forgot-password', ['handler' => ['App\Controllers\AuthController', 'sendResetLink']]);
+$r->addRoute('POST', '/reset-password', ['handler' => ['App\Controllers\AuthController', 'processPasswordReset']]);
+// Regex [0-9a-zA-Z]+ memastikan token hanya terdiri dari huruf dan angka.
+$r->addRoute('GET', '/reset-password/{token:[0-9a-zA-Z]+}', ['handler' => ['App\Controllers\AuthController', 'showResetPasswordForm']]);
+// Terapkan juga untuk rute verifikasi email
+$r->addRoute('GET', '/verify-email/{token:[0-9a-zA-Z]+}', ['handler' => ['App\Controllers\AuthController', 'verifyEmail']]);
+
     // --- RUTE ADMIN (Dengan Middleware) ---
     $r->addRoute('GET', '/admin/dashboard', [
         'handler' => ['App\Controllers\Admin\DashboardController', 'index'],

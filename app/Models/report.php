@@ -28,7 +28,7 @@ class Report extends BaseModel
         $sql = "SELECT r.*, u.username as reporter_username 
                 FROM reports r
                 JOIN users u ON r.user_id = u.user_id
-                ORDER BY r.created_at DESC";
+                ORDER BY r.resolved_at DESC";
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll();
     }

@@ -16,7 +16,7 @@
                     <p><strong>Durasi Aktif:</strong> <?= $package['duration_days'] ?> hari</p>
                 </div>
                 <div class="package-footer">
-                    <form action="/purchase/<?= $package['package_id'] ?>" method="POST">
+                    <form action="/purchase/<?= $package['package_id'] ?>" method="POST"> <?= \App\Utils\CSRF::field() ?>
                         <button type="submit" class="button button-primary">Beli Sekarang</button>
                     </form>
                 </div>

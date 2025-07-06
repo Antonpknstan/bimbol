@@ -1,4 +1,4 @@
-<form action="/login" method="POST">
+<form action="/login" method="POST"> <?= \App\Utils\CSRF::field() ?>
     <div class="form-group">
         <label for="username">Username atau Email</label>
         <input type="text" id="username" name="username" required>
